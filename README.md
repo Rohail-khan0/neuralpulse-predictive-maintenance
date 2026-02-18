@@ -11,20 +11,6 @@ The UI was conceptually designed using **Google Stitch** to ensure a professiona
 
 ---
 
-## 📸 Project Screenshots
-
-| **Login & Authentication** | **System Dashboard** |
-|:--------------------------:|:--------------------:|
-| ![Login Screen](./stitch/images/login_preview.png) | ![Dashboard](./stitch/images/dashboard_preview.png) |
-| *Secure role-based access* | *Real-time health monitoring* |
-
-| **Prediction Engine** | **Alert Logs** |
-|:---------------------:|:--------------:|
-| ![Prediction](./stitch/images/prediction_preview.png) | ![History](./stitch/images/history_preview.png) |
-| *Live Failure Probability %* | *Historical audit trails* |
-
----
-
 ## ✨ Key Features
 
 * **🧠 Advanced ML Integration:** Uses trained Logistic Regression/KNN models to predict failure probability with high accuracy.
