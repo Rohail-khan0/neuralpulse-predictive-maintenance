@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Health Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2badee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101c22",
+                        "surface-dark": "#162329",
+                        "surface-darker": "#0d1418",
+                        "border-dark": "#28353d",
+                        "status-success": "#10b981",
+                        "status-warning": "#f59e0b",
+                        "status-critical": "#ef4444",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "sans": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Space Grotesk", sans-serif;
+        }
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101c22;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #28353d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b4b54;
+        }
+        .gauge-mask {
+            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white overflow-hidden h-screen flex">
+<!-- Sidebar -->
+<aside class="w-64 h-full bg-surface-darker border-r border-border-dark flex flex-col justify-between p-4 shrink-0 overflow-y-auto">
+<div class="flex flex-col gap-8">
+<!-- Brand -->
+<div class="flex items-center gap-3 px-2">
+<div class="size-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white" style="font-size: 24px;">precision_manufacturing</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-none tracking-tight">PredMaintain</h1>
+<span class="text-slate-400 text-xs mt-1">v3.4.1 Enterprise</span>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-2">
+<p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Monitoring</p>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/20 text-primary border border-primary/30" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">precision_manufacturing</span>
+<span class="text-sm font-medium">Machines</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">monitoring</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">build</span>
+<span class="text-sm font-medium">Maintenance</span>
+</a>
+</nav>
+<nav class="flex flex-col gap-2">
+<p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">System</p>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">history</span>
+<span class="text-sm font-medium">Logs</span>
+</a>
+</nav>
+</div>
+<!-- User Profile Minimal -->
+<div class="mt-auto border-t border-border-dark pt-4">
+<div class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-surface-dark cursor-pointer transition-colors">
+<div class="size-8 rounded-full bg-slate-700 overflow-hidden relative border border-slate-600">
+<img alt="Engineer Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBge-bl4swMKC6uBA19OnMoMHIi0DW0LibFT8EkkY_fvENdqhORi-GLrLzCmsMzZB5paSwte9v259DkBBLgI_WNMpyGEKITNdtvKN31ryjs4CKQ9sZk_2WlrhBpEeqK7UaYlnovCrRn1QnL2AiJtRRTEOMKHREEFKR6qQPosAvzGtkLNvq9ZNyfgPKxbY5zQaUh1TY-xSmXMH1XZTJA3USHaiCxI7iyxYcn7hfprXWOOia7GrHaULBQOZGpSQg2reB6Wr9vIdrsnOs"/>
+</div>
+<div class="flex flex-col overflow-hidden">
+<span class="text-white text-sm font-medium truncate">Alex Chen</span>
+<span class="text-slate-500 text-xs truncate">Lead Engineer</span>
+</div>
+<span class="material-symbols-outlined text-slate-500 ml-auto text-sm">expand_more</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- Header -->
+<header class="h-16 bg-surface-darker/50 backdrop-blur border-b border-border-dark flex items-center justify-between px-8 shrink-0 z-10">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-slate-400 text-sm">
+<span>Operations</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-white font-medium">Unit A4 Monitor</span>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-400 border border-green-500/30">ONLINE</span>
+</div>
+<div class="flex items-center gap-6">
+<!-- Search -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors text-lg">search</span>
+<input class="bg-surface-dark border border-border-dark rounded-lg py-1.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 transition-all" placeholder="Search system ID..." type="text"/>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-3 text-slate-400">
+<button class="p-2 hover:text-white hover:bg-surface-dark rounded-lg transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full border-2 border-surface-darker"></span>
+</button>
+<button class="p-2 hover:text-white hover:bg-surface-dark rounded-lg transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Scrollable Dashboard Content -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="max-w-[1400px] mx-auto space-y-6">
+<!-- Top Section: Gauge & KPIs -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left KPI: Risk -->
+<div class="lg:col-span-3 bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col justify-between relative overflow-hidden group hover:border-primary/50 transition-colors">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary">warning</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium mb-1 flex items-center gap-2">
+<span class="size-2 rounded-full bg-status-warning animate-pulse"></span>
+                                Current Failure Risk
+                            </p>
+<div class="flex items-baseline gap-2 mt-2">
+<h3 class="text-5xl font-bold text-white tracking-tight">12<span class="text-2xl text-slate-500 font-normal">%</span></h3>
+</div>
+</div>
+<div class="mt-6">
+<div class="flex items-center gap-2 text-status-success bg-status-success/10 w-fit px-2 py-1 rounded text-sm font-medium mb-3">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>-5% from avg</span>
+</div>
+<div class="h-1.5 w-full bg-surface-darker rounded-full overflow-hidden">
+<div class="h-full bg-status-warning w-[12%] rounded-full relative">
+<div class="absolute right-0 top-0 bottom-0 w-[2px] bg-white shadow-[0_0_10px_2px_rgba(255,255,255,0.5)]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Center: Gauge Chart -->
+<div class="lg:col-span-6 bg-surface-dark border border-border-dark rounded-xl p-6 relative flex flex-col items-center justify-center min-h-[300px]">
+<div class="absolute top-6 left-6 flex flex-col">
+<h2 class="text-white text-lg font-bold">System Health Status</h2>
+<p class="text-slate-400 text-sm">Real-time aggregate score</p>
+</div>
+<!-- Gauge Visualization -->
+<div class="relative w-[280px] h-[140px] mt-8 mb-4">
+<!-- Background Arc -->
+<div class="absolute inset-0 rounded-t-full border-[30px] border-surface-darker border-b-0"></div>
+<!-- Colored Segments (SVG for precision) -->
+<svg class="absolute inset-0 w-full h-full" viewbox="0 0 200 100">
+<!-- Critical (Red) -->
+<path class="opacity-30" d="M 10 100 A 90 90 0 0 1 45 25" fill="none" stroke="#ef4444" stroke-dasharray="2 2" stroke-width="20"></path>
+<!-- Warning (Orange) -->
+<path class="opacity-30" d="M 48 22 A 90 90 0 0 1 100 10" fill="none" stroke="#f59e0b" stroke-dasharray="2 2" stroke-width="20"></path>
+<!-- Optimal (Green/Primary) -->
+<path d="M 105 10 A 90 90 0 0 1 190 100" fill="none" stroke="#2badee" stroke-width="20"></path>
+</svg>
+<!-- Needle Wrapper - Rotation based on value (88% -> approx 140deg from left) -->
+<div class="absolute bottom-0 left-1/2 w-full h-full origin-bottom flex justify-center items-end" style="transform: translateX(-50%) rotate(50deg);">
+<div class="w-1 h-[100px] bg-white shadow-[0_0_15px_2px_rgba(43,173,238,0.6)] origin-bottom rounded-full" style="transform-origin: bottom center;"></div>
+</div>
+<!-- Center Hub -->
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white rounded-full border-4 border-surface-dark z-10"></div>
+</div>
+<!-- Value Display -->
+<div class="text-center mt-2 z-10">
+<h3 class="text-4xl font-bold text-white tracking-tight">88<span class="text-xl text-slate-500">/100</span></h3>
+<p class="text-primary font-medium mt-1 px-3 py-1 bg-primary/10 rounded-full text-sm inline-block">OPTIMAL STATE</p>
+</div>
+<!-- Labels -->
+<div class="w-full flex justify-between px-12 mt-4 text-xs font-medium tracking-wider text-slate-500 uppercase">
+<span>Critical</span>
+<span>Warning</span>
+<span>Optimal</span>
+</div>
+</div>
+<!-- Right KPI: Predicted Status -->
+<div class="lg:col-span-3 bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col justify-between relative overflow-hidden group hover:border-primary/50 transition-colors">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary">model_training</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium mb-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">auto_awesome</span>
+                                Predicted Status
+                            </p>
+<div class="mt-4 flex items-center gap-3">
+<div class="size-3 rounded-full bg-status-success shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+<h3 class="text-4xl font-bold text-white tracking-tight">NORMAL</h3>
+</div>
+</div>
+<div class="mt-6">
+<p class="text-slate-400 text-sm mb-2">Confidence Level</p>
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-surface-darker rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[94%] rounded-full relative"></div>
+</div>
+<span class="text-white font-bold text-sm">94%</span>
+</div>
+<p class="text-xs text-slate-500 mt-2">Next predicted maintenance: 14 Days</p>
+</div>
+</div>
+</div>
+<!-- Middle Section: Detailed Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Vibration Chart -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-white font-medium text-lg">Vibration Analysis</h3>
+<p class="text-slate-400 text-xs">Last 24 Hours • Sensor V-04</p>
+</div>
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="flex-1 min-h-[180px] w-full relative">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="w-full h-px bg-border-dark border-t border-dashed border-slate-700/50"></div>
+<div class="w-full h-px bg-border-dark border-t border-dashed border-slate-700/50"></div>
+<div class="w-full h-px bg-border-dark border-t border-dashed border-slate-700/50"></div>
+<div class="w-full h-px bg-border-dark border-t border-dashed border-slate-700/50"></div>
+</div>
+<!-- Graph SVG -->
+<svg class="absolute inset-0 w-full h-full overflow-visible" preserveaspectratio="none">
+<defs>
+<lineargradient id="vibrationGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#2badee" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#2badee" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0 120 Q 40 110 80 125 T 160 110 T 240 130 T 320 100 T 400 120 T 480 90 T 560 115 T 640 105 L 640 180 L 0 180 Z" fill="url(#vibrationGradient)"></path>
+<path d="M0 120 Q 40 110 80 125 T 160 110 T 240 130 T 320 100 T 400 120 T 480 90 T 560 115 T 640 105" fill="none" stroke="#2badee" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+<div class="flex justify-between text-xs text-slate-500 mt-2 font-mono">
+<span>00:00</span>
+<span>06:00</span>
+<span>12:00</span>
+<span>18:00</span>
+<span>24:00</span>
+</div>
+</div>
+<!-- Temperature Distribution -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-white font-medium text-lg">Temperature Loads</h3>
+<p class="text-slate-400 text-xs">Current Distribution • Avg 55°C</p>
+</div>
+<div class="flex gap-1 text-xs font-medium bg-surface-darker p-1 rounded-lg border border-border-dark">
+<button class="px-3 py-1 bg-primary text-white rounded shadow-sm">Live</button>
+<button class="px-3 py-1 text-slate-400 hover:text-white transition-colors">Hist</button>
+</div>
+</div>
+<div class="flex-1 flex items-end justify-between gap-4 px-2 min-h-[180px]">
+<!-- Bar 1 -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-surface-darker rounded-t-sm relative h-[140px] overflow-hidden border-b border-border-dark">
+<div class="absolute bottom-0 w-full bg-slate-600/30 group-hover:bg-primary/40 transition-colors h-[40%]"></div>
+</div>
+<span class="text-xs text-slate-500 font-mono">Unit 1</span>
+</div>
+<!-- Bar 2 -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-surface-darker rounded-t-sm relative h-[140px] overflow-hidden border-b border-border-dark">
+<div class="absolute bottom-0 w-full bg-slate-600/30 group-hover:bg-status-warning/40 transition-colors h-[75%]"></div>
+</div>
+<span class="text-xs text-slate-500 font-mono">Unit 2</span>
+</div>
+<!-- Bar 3 -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-surface-darker rounded-t-sm relative h-[140px] overflow-hidden border-b border-border-dark">
+<div class="absolute bottom-0 w-full bg-slate-600/30 group-hover:bg-primary/40 transition-colors h-[55%]"></div>
+</div>
+<span class="text-xs text-slate-500 font-mono">Unit 3</span>
+</div>
+<!-- Bar 4 -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-surface-darker rounded-t-sm relative h-[140px] overflow-hidden border-b border-border-dark">
+<div class="absolute bottom-0 w-full bg-slate-600/30 group-hover:bg-primary/40 transition-colors h-[30%]"></div>
+</div>
+<span class="text-xs text-slate-500 font-mono">Unit 4</span>
+</div>
+<!-- Bar 5 -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-surface-darker rounded-t-sm relative h-[140px] overflow-hidden border-b border-border-dark">
+<div class="absolute bottom-0 w-full bg-slate-600/30 group-hover:bg-primary/40 transition-colors h-[60%]"></div>
+</div>
+<span class="text-xs text-slate-500 font-mono">Unit 5</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Active Machines Table -->
+<div class="bg-surface-dark border border-border-dark rounded-xl overflow-hidden flex flex-col">
+<div class="p-6 border-b border-border-dark flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h3 class="text-white text-lg font-bold">Active Machines Status</h3>
+<p class="text-slate-400 text-sm">Real-time monitoring of connected units</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-dark bg-surface-darker text-slate-300 text-sm hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                                Filter
+                            </button>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-dark bg-surface-darker text-slate-300 text-sm hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+                                Export
+                            </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-darker/50 border-b border-border-dark text-xs uppercase tracking-wider text-slate-500">
+<th class="px-6 py-4 font-semibold w-24">ID</th>
+<th class="px-6 py-4 font-semibold">Type</th>
+<th class="px-6 py-4 font-semibold">Temperature</th>
+<th class="px-6 py-4 font-semibold w-1/4">Vibration Load</th>
+<th class="px-6 py-4 font-semibold">Last Maint.</th>
+<th class="px-6 py-4 font-semibold text-right">Status</th>
+</tr>
+</thead>
+<tbody class="text-sm divide-y divide-border-dark">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-darker/30 transition-colors">
+<td class="px-6 py-4 text-white font-mono">M-001</td>
+<td class="px-6 py-4 text-slate-300">Hydraulic Press A</td>
+<td class="px-6 py-4 text-slate-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-success text-sm">thermometer</span>
+                                            45°C
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 bg-surface-darker rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[80%] rounded-full"></div>
+</div>
+<span class="text-slate-400 font-mono text-xs">80%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-400">2 days ago</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-success/10 text-status-success border border-status-success/20">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                                            Optimal
+                                        </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-darker/30 transition-colors">
+<td class="px-6 py-4 text-white font-mono">M-002</td>
+<td class="px-6 py-4 text-slate-300">Conveyor Belt Main</td>
+<td class="px-6 py-4 text-slate-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-warning text-sm">thermometer</span>
+                                            62°C
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 bg-surface-darker rounded-full overflow-hidden">
+<div class="h-full bg-status-warning w-[95%] rounded-full"></div>
+</div>
+<span class="text-slate-400 font-mono text-xs">95%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-400">14 days ago</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-warning/10 text-status-warning border border-status-warning/20">
+<span class="material-symbols-outlined text-sm">warning</span>
+                                            Warning
+                                        </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-surface-darker/30 transition-colors">
+<td class="px-6 py-4 text-white font-mono">M-003</td>
+<td class="px-6 py-4 text-slate-300">CNC Drill Press</td>
+<td class="px-6 py-4 text-slate-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-success text-sm">thermometer</span>
+                                            50°C
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 bg-surface-darker rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[40%] rounded-full"></div>
+</div>
+<span class="text-slate-400 font-mono text-xs">40%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-400">Yesterday</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-success/10 text-status-success border border-status-success/20">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                                            Optimal
+                                        </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-surface-darker/30 transition-colors">
+<td class="px-6 py-4 text-white font-mono">M-004</td>
+<td class="px-6 py-4 text-slate-300">Cooling Unit B</td>
+<td class="px-6 py-4 text-slate-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-success text-sm">thermometer</span>
+                                            38°C
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 bg-surface-darker rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[25%] rounded-full"></div>
+</div>
+<span class="text-slate-400 font-mono text-xs">25%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-400">5 days ago</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-success/10 text-status-success border border-status-success/20">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                                            Optimal
+                                        </span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-surface-darker/30 transition-colors">
+<td class="px-6 py-4 text-white font-mono">M-005</td>
+<td class="px-6 py-4 text-slate-300">Robotic Arm Z</td>
+<td class="px-6 py-4 text-slate-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-critical text-sm">thermometer</span>
+                                            88°C
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 bg-surface-darker rounded-full overflow-hidden">
+<div class="h-full bg-status-critical w-[98%] rounded-full"></div>
+</div>
+<span class="text-slate-400 font-mono text-xs">98%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-400">Overdue</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-critical/10 text-status-critical border border-status-critical/20 animate-pulse">
+<span class="material-symbols-outlined text-sm">error</span>
+                                            Critical
+                                        </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-border-dark flex items-center justify-between text-xs text-slate-500">
+<span>Showing 5 of 24 active units</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-surface-darker border border-border-dark rounded hover:text-white transition-colors">Previous</button>
+<button class="px-3 py-1 bg-surface-darker border border-border-dark rounded hover:text-white transition-colors">Next</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

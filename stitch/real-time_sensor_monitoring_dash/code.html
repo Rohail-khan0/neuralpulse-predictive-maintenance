@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Real-time Sensor Monitoring Dash</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2badee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#0B1114", // Deep dark slate
+                        "card-dark": "#111A20", // Slightly lighter navy/slate for cards
+                        "neon-cyan": "#2badee",
+                        "neon-orange": "#ff5f1f",
+                        "neon-green": "#32cd32",
+                        "neon-amber": "#ffbf00",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .neon-glow-cyan { filter: drop-shadow(0 0 4px rgba(43, 173, 238, 0.5)); }
+        .neon-glow-orange { filter: drop-shadow(0 0 4px rgba(255, 95, 31, 0.5)); }
+        .neon-glow-green { filter: drop-shadow(0 0 4px rgba(50, 205, 50, 0.5)); }
+        .neon-glow-amber { filter: drop-shadow(0 0 4px rgba(255, 191, 0, 0.5)); }
+        
+        .grid-bg {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111618] dark:text-white font-display overflow-hidden flex flex-col h-screen">
+<!-- Top Navigation -->
+<header class="flex-none flex items-center justify-between border-b border-[#283339] bg-card-dark px-6 py-3 z-10">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-10 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-2xl">precision_manufacturing</span>
+</div>
+<div>
+<h1 class="text-white text-lg font-bold leading-tight tracking-tight">Machine Failure Prediction System</h1>
+<p class="text-[#9db0b9] text-xs font-medium tracking-wider uppercase">Unit 4B • Status: <span class="text-neon-green">Running</span></p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end hidden md:flex">
+<span class="text-white text-sm font-bold">14:32:05 UTC</span>
+<span class="text-[#9db0b9] text-xs">October 24, 2023</span>
+</div>
+<div class="h-8 w-px bg-[#283339]"></div>
+<button class="flex items-center gap-2 rounded-lg bg-[#283339] px-4 py-2 text-sm font-bold text-white hover:bg-[#34424a] transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Export Log</span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 ring-2 ring-[#283339]" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCfLrWgSgSOAapCA3gcD_nHNAvM-XRqTsLtEd8PJ8QqrL94HV82Oa5nSUOLGYQP2iyQP93HvFuwtfl0eznO-WOzKxm75dYG7ba6VonzDc9XONBbn9dooEehGT4BhPudVLJOEMcUkaNDBQqVJ1eR0Tar7NyLEENiVJKcPbxnK5eXx4vopfgcE9YYAuvjO4IMXNlINhfYsQg-IDY-4RRdYSTxeb9z0LefMIO2sMq9wrWrC7BPZ3ki1xDJqJy4OlSDWdHC1k464uj4D1o");'></div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex overflow-hidden">
+<!-- Dashboard Grid (Scrollable if needed, but designed to fit) -->
+<div class="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-[#283339] scrollbar-track-transparent">
+<div class="mb-6 flex items-end justify-between">
+<div>
+<h2 class="text-3xl font-bold tracking-tight text-white mb-1">Real-time Sensor Monitoring</h2>
+<p class="text-[#9db0b9]">Live telemetry feed from critical subsystems.</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-[#9db0b9] hover:text-white hover:bg-[#283339] rounded-lg transition-colors">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+<button class="p-2 text-[#9db0b9] hover:text-white hover:bg-[#283339] rounded-lg transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+<!-- 2x2 Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-auto min-h-[600px]">
+<!-- Chart 1: Temperature -->
+<div class="bg-card-dark border border-[#283339] rounded-xl p-5 flex flex-col relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-5 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[#9db0b9]">open_in_full</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-neon-cyan/10 text-neon-cyan">
+<span class="material-symbols-outlined">thermostat</span>
+</div>
+<div>
+<h3 class="text-[#9db0b9] text-sm font-medium uppercase tracking-wider">Temperature</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-white tracking-tighter">85.4</span>
+<span class="text-lg text-[#9db0b9] font-medium">°C</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-neon-cyan text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span> +2.1%
+                            </span>
+<span class="text-[#556975] text-xs">vs last hour</span>
+</div>
+</div>
+<!-- Chart Area -->
+<div class="flex-1 w-full relative grid-bg rounded-lg border border-[#283339]/50">
+<svg class="absolute inset-0 w-full h-full p-2" preserveaspectratio="none" viewbox="0 0 400 150">
+<!-- Gradient Defs -->
+<defs>
+<lineargradient id="gradCyan" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:rgb(43, 173, 238);stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:rgb(43, 173, 238);stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<path d="M0,37.5 L400,37.5 M0,75 L400,75 M0,112.5 L400,112.5" stroke="#283339" stroke-dasharray="4,4" stroke-width="1"></path>
+<!-- Data Line -->
+<path class="neon-glow-cyan vector-effect-non-scaling-stroke" d="M0,100 C20,90 40,95 60,80 C80,65 100,70 120,60 C140,50 160,55 180,45 C200,35 220,40 240,50 C260,60 280,55 300,45 C320,35 340,30 360,40 C380,50 400,35" fill="url(#gradCyan)" stroke="#2badee" stroke-width="3"></path>
+<!-- Current Point Dot -->
+<circle class="neon-glow-cyan animate-pulse" cx="400" cy="35" fill="#2badee" r="4"></circle>
+</svg>
+</div>
+<div class="flex justify-between mt-2 text-[#556975] text-xs font-mono">
+<span>-60m</span>
+<span>-45m</span>
+<span>-30m</span>
+<span>-15m</span>
+<span>Now</span>
+</div>
+</div>
+<!-- Chart 2: Vibration -->
+<div class="bg-card-dark border border-[#283339] rounded-xl p-5 flex flex-col relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-neon-orange/10 text-neon-orange">
+<span class="material-symbols-outlined">vibration</span>
+</div>
+<div>
+<h3 class="text-[#9db0b9] text-sm font-medium uppercase tracking-wider">Vibration</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-white tracking-tighter">4.2</span>
+<span class="text-lg text-[#9db0b9] font-medium">mm/s</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-neon-green text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_flat</span> Stable
+                            </span>
+<span class="text-[#556975] text-xs">Normal Range</span>
+</div>
+</div>
+<!-- Chart Area -->
+<div class="flex-1 w-full relative grid-bg rounded-lg border border-[#283339]/50">
+<svg class="absolute inset-0 w-full h-full p-2" preserveaspectratio="none" viewbox="0 0 400 150">
+<defs>
+<lineargradient id="gradOrange" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:rgb(255, 95, 31);stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:rgb(255, 95, 31);stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,37.5 L400,37.5 M0,75 L400,75 M0,112.5 L400,112.5" stroke="#283339" stroke-dasharray="4,4" stroke-width="1"></path>
+<!-- Jagged Vibration Line -->
+<path class="neon-glow-orange" d="M0,80 L20,60 L30,90 L50,50 L70,85 L90,65 L110,80 L130,40 L150,75 L170,55 L190,70 L210,60 L230,85 L250,50 L270,75 L290,60 L310,80 L330,55 L350,70 L370,60 L390,75 L400,65" fill="none" stroke="#ff5f1f" stroke-width="2"></path>
+<circle class="neon-glow-orange animate-pulse" cx="400" cy="65" fill="#ff5f1f" r="4"></circle>
+</svg>
+</div>
+<div class="flex justify-between mt-2 text-[#556975] text-xs font-mono">
+<span>-60m</span>
+<span>-45m</span>
+<span>-30m</span>
+<span>-15m</span>
+<span>Now</span>
+</div>
+</div>
+<!-- Chart 3: Pressure -->
+<div class="bg-card-dark border border-[#283339] rounded-xl p-5 flex flex-col relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-neon-green/10 text-neon-green">
+<span class="material-symbols-outlined">compress</span>
+</div>
+<div>
+<h3 class="text-[#9db0b9] text-sm font-medium uppercase tracking-wider">Pressure</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-white tracking-tighter">1,250</span>
+<span class="text-lg text-[#9db0b9] font-medium">PSI</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-neon-orange text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_down</span> -1.2%
+                            </span>
+<span class="text-[#556975] text-xs">vs last hour</span>
+</div>
+</div>
+<!-- Chart Area -->
+<div class="flex-1 w-full relative grid-bg rounded-lg border border-[#283339]/50">
+<svg class="absolute inset-0 w-full h-full p-2" preserveaspectratio="none" viewbox="0 0 400 150">
+<defs>
+<lineargradient id="gradGreen" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:rgb(50, 205, 50);stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:rgb(50, 205, 50);stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,37.5 L400,37.5 M0,75 L400,75 M0,112.5 L400,112.5" stroke="#283339" stroke-dasharray="4,4" stroke-width="1"></path>
+<path d="M0,50 C50,50 80,45 120,45 C160,45 200,60 240,65 C280,70 320,75 360,80 L400,85 L400,150 L0,150 Z" fill="url(#gradGreen)" stroke="none"></path>
+<path class="neon-glow-green" d="M0,50 C50,50 80,45 120,45 C160,45 200,60 240,65 C280,70 320,75 360,80 L400,85" fill="none" stroke="#32cd32" stroke-width="3"></path>
+<circle class="neon-glow-green animate-pulse" cx="400" cy="85" fill="#32cd32" r="4"></circle>
+</svg>
+</div>
+<div class="flex justify-between mt-2 text-[#556975] text-xs font-mono">
+<span>-60m</span>
+<span>-45m</span>
+<span>-30m</span>
+<span>-15m</span>
+<span>Now</span>
+</div>
+</div>
+<!-- Chart 4: RPM / Torque -->
+<div class="bg-card-dark border border-[#283339] rounded-xl p-5 flex flex-col relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-neon-amber/10 text-neon-amber">
+<span class="material-symbols-outlined">speed</span>
+</div>
+<div>
+<h3 class="text-[#9db0b9] text-sm font-medium uppercase tracking-wider">RPM / Torque</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-white tracking-tighter">2,400</span>
+<span class="text-lg text-[#9db0b9] font-medium">RPM</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-neon-cyan text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span> +0.8%
+                            </span>
+<span class="text-[#556975] text-xs">Load Increasing</span>
+</div>
+</div>
+<!-- Chart Area -->
+<div class="flex-1 w-full relative grid-bg rounded-lg border border-[#283339]/50">
+<svg class="absolute inset-0 w-full h-full p-2" preserveaspectratio="none" viewbox="0 0 400 150">
+<defs>
+<lineargradient id="gradAmber" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:rgb(255, 191, 0);stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:rgb(255, 191, 0);stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,37.5 L400,37.5 M0,75 L400,75 M0,112.5 L400,112.5" stroke="#283339" stroke-dasharray="4,4" stroke-width="1"></path>
+<!-- Stepped Line for RPM -->
+<path class="neon-glow-amber" d="M0,100 L50,100 L55,80 L100,80 L105,75 L150,75 L155,60 L200,60 L205,55 L250,55 L255,50 L300,50 L305,45 L400,45" fill="none" stroke="#ffbf00" stroke-width="3"></path>
+<!-- Fill Area -->
+<path d="M0,100 L50,100 L55,80 L100,80 L105,75 L150,75 L155,60 L200,60 L205,55 L250,55 L255,50 L300,50 L305,45 L400,45 L400,150 L0,150 Z" fill="url(#gradAmber)" opacity="0.5" stroke="none"></path>
+<circle class="neon-glow-amber animate-pulse" cx="400" cy="45" fill="#ffbf00" r="4"></circle>
+</svg>
+</div>
+<div class="flex justify-between mt-2 text-[#556975] text-xs font-mono">
+<span>-60m</span>
+<span>-45m</span>
+<span>-30m</span>
+<span>-15m</span>
+<span>Now</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar -->
+<aside class="w-80 bg-[#0F161B] border-l border-[#283339] flex flex-col overflow-y-auto z-20 shadow-xl">
+<div class="p-6 border-b border-[#283339]">
+<h3 class="text-white text-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-neon-orange">warning</span>
+                    Tool Wear Status
+                </h3>
+<!-- Main Wear Gauge -->
+<div class="mb-6 relative group cursor-pointer">
+<div class="flex justify-between items-end mb-2">
+<span class="text-[#9db0b9] text-sm">Wear Level</span>
+<span class="text-white text-2xl font-bold">75%</span>
+</div>
+<!-- Segmented Progress Bar -->
+<div class="flex gap-1 h-3 w-full mb-2">
+<!-- 0-50% Green -->
+<div class="flex-1 bg-neon-green/30 rounded-sm overflow-hidden">
+<div class="h-full bg-neon-green w-full"></div>
+</div>
+<div class="flex-1 bg-neon-green/30 rounded-sm overflow-hidden">
+<div class="h-full bg-neon-green w-full"></div>
+</div>
+<div class="flex-1 bg-neon-green/30 rounded-sm overflow-hidden">
+<div class="h-full bg-neon-green w-full"></div>
+</div>
+<!-- 50-80% Yellow -->
+<div class="flex-1 bg-neon-amber/30 rounded-sm overflow-hidden">
+<div class="h-full bg-neon-amber w-full"></div>
+</div>
+<div class="flex-1 bg-neon-amber/30 rounded-sm overflow-hidden">
+<div class="h-full bg-neon-amber w-[80%]"></div>
+</div>
+<!-- 80-100% Red -->
+<div class="flex-1 bg-[#ff4444]/20 rounded-sm overflow-hidden"></div>
+</div>
+<div class="p-3 bg-primary/10 rounded-lg border border-primary/20 mt-3">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-sm">psychology</span>
+<span class="text-primary text-xs font-bold uppercase tracking-wider">AI Prediction</span>
+</div>
+<p class="text-white text-sm font-medium">Failure Probability: <span class="text-neon-green">12% (Low)</span></p>
+<p class="text-[#9db0b9] text-xs mt-1">Est. Remaining Life: 48h</p>
+</div>
+</div>
+</div>
+<!-- Recent Alerts Log -->
+<div class="flex-1 p-6 overflow-y-auto">
+<h4 class="text-[#9db0b9] text-xs font-bold uppercase tracking-wider mb-4">Recent Events</h4>
+<div class="space-y-4 relative before:absolute before:left-[19px] before:top-2 before:bottom-0 before:w-px before:bg-[#283339]">
+<!-- Alert Item -->
+<div class="relative pl-8">
+<div class="absolute left-3 top-1 size-2 rounded-full bg-neon-orange border border-[#0F161B] ring-2 ring-neon-orange/20"></div>
+<p class="text-white text-sm font-medium">Vibration Spike</p>
+<p class="text-[#556975] text-xs mb-1">10:45 AM • Sensor B</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-neon-orange/10 text-neon-orange">Warning</span>
+</div>
+<!-- Alert Item -->
+<div class="relative pl-8">
+<div class="absolute left-3 top-1 size-2 rounded-full bg-[#283339] border border-[#556975]"></div>
+<p class="text-[#9db0b9] text-sm">Routine Calibration</p>
+<p class="text-[#556975] text-xs mb-1">08:00 AM • System</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-[#283339] text-[#9db0b9]">Info</span>
+</div>
+<!-- Alert Item -->
+<div class="relative pl-8">
+<div class="absolute left-3 top-1 size-2 rounded-full bg-neon-green border border-[#0F161B] ring-2 ring-neon-green/20"></div>
+<p class="text-white text-sm font-medium">Cycle Complete</p>
+<p class="text-[#556975] text-xs mb-1">07:30 AM • Batch #402</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-neon-green/10 text-neon-green">Success</span>
+</div>
+<!-- Alert Item -->
+<div class="relative pl-8">
+<div class="absolute left-3 top-1 size-2 rounded-full bg-[#283339] border border-[#556975]"></div>
+<p class="text-[#9db0b9] text-sm">Shift Change</p>
+<p class="text-[#556975] text-xs mb-1">06:00 AM • Operator</p>
+</div>
+</div>
+</div>
+<!-- Control Actions -->
+<div class="p-6 border-t border-[#283339] bg-[#111A20]">
+<button class="w-full mb-3 flex items-center justify-center gap-2 rounded-lg bg-[#ff4444] hover:bg-[#ff2222] px-4 py-3 text-white text-sm font-bold shadow-lg shadow-red-900/20 transition-all">
+<span class="material-symbols-outlined">gpp_maybe</span>
+                    Emergency Stop
+                </button>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg bg-[#283339] hover:bg-[#34424a] px-4 py-3 text-white text-sm font-bold transition-all border border-[#556975]/30">
+<span class="material-symbols-outlined">build</span>
+                    Maintenance Mode
+                </button>
+</div>
+</aside>
+</main>
+</body></html>

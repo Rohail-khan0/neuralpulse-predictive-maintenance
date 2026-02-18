@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Modern Engineering Login Variant</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0f49bd",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for modern feel if needed */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101622;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased selection:bg-primary selection:text-white h-screen overflow-hidden">
+<div class="flex h-full w-full flex-row">
+<!-- Left Visual Panel -->
+<div class="relative hidden w-1/2 lg:flex flex-col justify-between overflow-hidden bg-slate-900">
+<!-- Background Image with Overlay -->
+<div class="absolute inset-0 bg-cover bg-center z-0 opacity-60 mix-blend-overlay" data-alt="Dark automated factory floor with robotic arms and dramatic lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDnUWX6pN3TDIn3m6zUccRj_nEAcPAeoTehB0Dqdhdf6gCIL4WuEMd8-2XFGmzpOnyAuc9NSCojWt4xwCrmHEhhNYgIho-QJ2riONkflLchRbmfji_hnr0pN0lfIBYyglB3MYuOUujbVwRZwcp-tUj5k6gkPRW9P6BcuwADOnYwwLTcOwzSB85S-JnEnkdIN9xcdE2ufWerC9Qvku0zS0tFBlASs8Fs-BrAbhVguhIlDJTZzDzuXodaI3o9jV_mUNGpBFlkHvGaH0o');"></div>
+<div class="absolute inset-0 bg-gradient-to-br from-primary/30 to-background-dark/90 z-10"></div>
+<!-- Content over image -->
+<div class="relative z-20 p-12 h-full flex flex-col justify-between">
+<div>
+<div class="h-10 w-10 bg-primary rounded-lg flex items-center justify-center mb-6 shadow-lg shadow-primary/40">
+<span class="material-symbols-outlined text-white" style="font-size: 24px;">precision_manufacturing</span>
+</div>
+<h2 class="text-4xl font-bold tracking-tight text-white mb-2 max-w-md">Industrial Intelligence Redefined.</h2>
+<p class="text-slate-300 text-lg max-w-sm font-light">Predictive maintenance powered by neural networks.</p>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 bg-black/40 backdrop-blur-md p-4 rounded-lg border border-white/10 w-fit">
+<span class="material-symbols-outlined text-green-400">check_circle</span>
+<div>
+<p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Grid Status</p>
+<p class="text-sm font-medium text-white">Fully Operational</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Login Form Panel -->
+<div class="flex w-full lg:w-1/2 flex-col justify-center bg-[#0b0f19] px-8 sm:px-12 lg:px-24 xl:px-32 border-l border-white/5 relative">
+<!-- Top Right decorative element -->
+<div class="absolute top-0 right-0 p-8">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/50 border border-slate-700/50">
+<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-medium text-slate-400">System Online (Latency: 12ms)</span>
+</div>
+</div>
+<div class="w-full max-w-[480px] mx-auto">
+<div class="mb-10">
+<h1 class="text-3xl font-bold text-white mb-2 tracking-tight">Failure Prediction System <span class="text-primary">v4.0</span></h1>
+<p class="text-slate-400 text-base">Authorized personnel access only. Please identify yourself.</p>
+</div>
+<form class="flex flex-col gap-6">
+<!-- Username Input -->
+<div class="space-y-2">
+<label class="text-sm font-medium text-slate-300 tracking-wide flex items-center gap-2" for="username">
+<span class="material-symbols-outlined text-[18px] text-slate-500">person</span>
+                            Username
+                        </label>
+<div class="relative group">
+<input class="w-full bg-[#151b2b] border border-[#2d3648] text-white text-base rounded-md focus:ring-1 focus:ring-primary focus:border-primary block p-3.5 placeholder-slate-600 transition-all duration-200 outline-none" id="username" placeholder="Enter your username" type="text"/>
+<div class="absolute inset-0 rounded-md ring-1 ring-white/5 pointer-events-none"></div>
+</div>
+</div>
+<!-- Employee ID Input -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="text-sm font-medium text-slate-300 tracking-wide flex items-center gap-2" for="employee-id">
+<span class="material-symbols-outlined text-[18px] text-slate-500">badge</span>
+                                Employee ID
+                            </label>
+</div>
+<div class="relative group">
+<input class="w-full bg-[#151b2b] border border-[#2d3648] text-white text-base rounded-md focus:ring-1 focus:ring-primary focus:border-primary block p-3.5 placeholder-slate-600 transition-all duration-200 outline-none font-mono tracking-wider" id="employee-id" placeholder="ex. ENG-8821" type="text"/>
+<div class="absolute inset-0 rounded-md ring-1 ring-white/5 pointer-events-none"></div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-1">
+<div class="flex items-center">
+<!-- Could add Remember Me here if needed -->
+</div>
+<a class="text-sm font-medium text-primary hover:text-blue-400 transition-colors" href="#">Forgot Password?</a>
+</div>
+<!-- Submit Button -->
+<button class="mt-4 w-full bg-primary hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-md transition-all duration-300 shadow-lg shadow-primary/25 hover:shadow-primary/40 flex items-center justify-center gap-2 group" type="button">
+<span>Authenticate Access</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform text-[20px]">arrow_forward</span>
+</button>
+</form>
+<!-- Footer / Legal -->
+<div class="mt-12 pt-6 border-t border-slate-800/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+<p>© 2024 Industrial Systems Corp.</p>
+<div class="flex gap-4">
+<a class="hover:text-slate-300 transition-colors" href="#">Privacy</a>
+<a class="hover:text-slate-300 transition-colors" href="#">Terms</a>
+<a class="hover:text-slate-300 transition-colors" href="#">Support</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

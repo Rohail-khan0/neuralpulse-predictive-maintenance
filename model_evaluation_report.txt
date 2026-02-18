@@ -1,0 +1,30 @@
+PREDICTIVE MAINTENANCE MODEL EVALUATION REPORT
+================================================================================
+
+Best Model: XGBoost
+Date: 2026-02-09
+
+MODEL PERFORMANCE
+--------------------------------------------------------------------------------
+              precision    recall  f1-score   support
+
+  No Failure       0.99      0.98      0.99      1932
+     Failure       0.66      0.84      0.74        68
+
+    accuracy                           0.98      2000
+   macro avg       0.83      0.91      0.86      2000
+weighted avg       0.98      0.98      0.98      2000
+
+
+CONFUSION MATRIX
+--------------------------------------------------------------------------------
+True Negatives: 1891 | False Positives: 41
+False Negatives: 14 | True Positives: 54
+
+
+BUSINESS IMPACT
+--------------------------------------------------------------------------------
+Total actual failures: 68
+Failures detected: 54 (79.4%)
+Failures missed: 14 (20.6%)
+False alarms: 41
