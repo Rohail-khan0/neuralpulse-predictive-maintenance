@@ -20,8 +20,8 @@ st.markdown('<link href="https://fonts.googleapis.com/css2?family=Material+Symbo
 
 # --- Constants & Config ---
 USERS_FILE = 'users.json'
-MODEL_FILE = 'best_model.pkl'
-SCALER_FILE = 'scaler.pkl'
+MODEL_FILE = 'final_model.pkl'
+SCALER_FILE = 'final_scaler.pkl'
 
 # --- Theme & Styling ---
 # Deep Navy (#050A14) / Charcoal (#111827) / Accent (#3B82F6)
