@@ -15,7 +15,7 @@ The UI was conceptually designed using **Google Stitch** to ensure a professiona
 
 | **Login & Authentication** | **System Dashboard** |
 |:--------------------------:|:--------------------:|
-| ![Login Screen](./stitch/images/login_preview.png) | ![Dashboard](./stitch/images/dashboard_preview.png) |
+| ![Login Screen](https://github.com/Rohail-khan0/neuralpulse-predictive-maintenance/blob/main/stitch/industrial_system_login_1/screen.png) | ![Dashboard](./stitch/images/dashboard_preview.png) |
 | *Secure role-based access* | *Real-time health monitoring* |
 
 | **Prediction Engine** | **Alert Logs** |
